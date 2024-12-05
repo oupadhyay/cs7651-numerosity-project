@@ -1,2 +1,3 @@
 *.pth
-checkpoints/*.pth
+cs7651-vgg19
+cs7651-vgg19/*.pth

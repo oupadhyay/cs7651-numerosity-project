@@ -179,7 +179,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoints_dir",
         type=str,
-        default="checkpoints",
+        default="cs7651-vgg19",
         help="Directory containing the model checkpoints.",
     )
     args = parser.parse_args()

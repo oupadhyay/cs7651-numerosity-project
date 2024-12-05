@@ -1,0 +1,11 @@
+---------------------------------------
+Begin Slurm Prolog: Dec-05-2024 16:25:27
+Job ID:    1017546
+User ID:   oupadhyay3
+Account:   coc
+Job name:  numerosity
+Partition: coe-gpu
+---------------------------------------
+using device:  cuda
+Running numerosity experiment...
+  0%|          | 0/13 [00:00<?, ?it/s]Using cache found in /home/hice1/oupadhyay3/.cache/torch/hub/pytorch_vision_v0.10.0
