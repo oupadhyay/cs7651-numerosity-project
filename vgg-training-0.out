@@ -1,0 +1,55 @@
+---------------------------------------
+Begin Slurm Prolog: Nov-30-2024 17:36:35
+Job ID:    997943
+User ID:   oupadhyay3
+Account:   coc
+Job name:  vgg
+Partition: coe-gpu
+---------------------------------------
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/condabin/conda
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/bin/conda
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/bin/conda-env
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/bin/activate
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/bin/deactivate
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/etc/profile.d/conda.sh
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/etc/fish/conf.d/conda.fish
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/shell/condabin/Conda.psm1
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/shell/condabin/conda-hook.ps1
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/lib/python3.9/site-packages/xontrib/conda.xsh
+no change     /usr/local/pace-apps/manual/packages/anaconda3/2022.05.0.1/etc/profile.d/conda.csh
+no change     /home/hice1/oupadhyay3/.bashrc
+No action taken.
+/storage/ice-shared/vip-vx4/cs7651/vgg.py:97: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(checkpoint_path)
+Starting VGG19 training...
+Resuming training from epoch 21
+Starting training loop...
+Starting epoch 22
+
+Epoch 22/25, Loss: 2.6106
+Checkpoint saved to ./checkpoints/vgg19_epoch_22.pth
+Starting epoch 23
+
+Epoch 23/25, Loss: 2.5911
+Checkpoint saved to ./checkpoints/vgg19_epoch_23.pth
+Starting epoch 24
+
+Epoch 24/25, Loss: 2.5732
+Checkpoint saved to ./checkpoints/vgg19_epoch_24.pth
+Starting epoch 25
+
+Epoch 25/25, Loss: 2.5546
+Checkpoint saved to ./checkpoints/vgg19_epoch_25.pth
+Training finished!
+---------------------------------------
+Begin Slurm Epilog: Dec-01-2024 03:11:33
+Job ID:        997943
+Array Job ID:  _4294967294
+User ID:       oupadhyay3
+Account:       coc
+Job name:      vgg
+Resources:     cpu=1,gres/gpu:h100=1,mem=4G,node=1
+Rsrc Used:     cput=61:34:59,vmem=0,walltime=09:34:59,mem=4163448K,energy_used=0
+Partition:     coe-gpu
+Nodes:         atl1-1-03-012-8-0
+---------------------------------------
