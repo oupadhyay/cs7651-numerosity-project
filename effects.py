@@ -6,7 +6,6 @@ from scipy.stats import pearsonr
 from sklearn.metrics import r2_score
 import argparse
 
-
 # --- Helper functions for calculating effects ---
 def calculate_effects(results):
     distances = []
@@ -32,7 +31,6 @@ def calculate_effects(results):
         similarities_size,
         similarities_ratio,
     )
-
 
 # --- Plotting and correlation functions ---
 def plot_effects(
@@ -92,7 +90,6 @@ def plot_effects(
     plt.savefig(f"Combined_Effects_Epoch_{epoch}.png")  # Save as PNG
     plt.close(fig)
 
-
 def plot_correlations(all_correlations, all_r2):
     epochs = list(all_correlations.keys())
     distance_correlations = [all_correlations[epoch][0] for epoch in epochs]
@@ -126,7 +123,6 @@ def plot_correlations(all_correlations, all_r2):
     fig.tight_layout()
     plt.savefig("Correlation_and_R2_Across_Epochs.png")
     plt.close(fig)
-
 
 # --- Main effects analysis ---
 def main(results_file):

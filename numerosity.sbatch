@@ -13,4 +13,4 @@ source ~/.bashrc                         # Source the bashrc file
 conda activate llama                     # Activate the conda environment
 cd /storage/ice-shared/vip-vx4/cs7651    # Change to the directory where the Python script is located
 
-python numerosity.py --stimuli_type natural-images
+python numerosity.py --stimuli_type random-shape_area
