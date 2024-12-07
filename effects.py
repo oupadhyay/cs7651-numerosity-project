@@ -32,6 +32,10 @@ def calculate_effects(results):
         similarities_ratio,
     )
 
+# --- Sigmoid function ---
+def sigmoid(x, L, k, x0, c):
+    return L / (1 + np.exp(-k * (x - x0))) + c
+
 # --- Plotting and correlation functions ---
 def plot_effects(
     distances,
@@ -61,18 +65,19 @@ def plot_effects(
     # Ratio Effect
     try:
         popt, _ = scipy.optimize.curve_fit(
-            lambda x, a, b, c: a * np.exp(-b * x) + c,
+            sigmoid,
             ratios,
             similarities_ratio,
-            p0=[1, 1, 0],
-        )  # Fit exponential
-        y_pred = popt[0] * np.exp(-popt[1] * np.array(ratios)) + popt[2]
+            p0=[1, 1, np.median(ratios), 0],  # Initial guesses for L, k, x0, c
+            maxfev=10000  # Increase max iterations if needed
+        )
+        y_pred = sigmoid(np.array(ratios), *popt)
         r2 = r2_score(similarities_ratio, y_pred)
 
         axes[2].scatter(ratios, similarities_ratio)
         x_fit = np.linspace(min(ratios), max(ratios), 100)
-        y_fit = popt[0] * np.exp(-popt[1] * x_fit) + popt[2]
-        axes[2].plot(x_fit, y_fit, "r-", label="Fitted Exponential")  # Plot fitted line
+        y_fit = sigmoid(x_fit, *popt)
+        axes[2].plot(x_fit, y_fit, "r-", label="Fitted Sigmoid")  # Plot fitted line
 
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
@@ -155,12 +160,13 @@ def main(results_file):
 
         try:
             popt, _ = scipy.optimize.curve_fit(
-                lambda x, a, b, c: a * np.exp(-b * x) + c,
+                sigmoid,
                 ratios,
                 similarities_ratio,
-                p0=[1, 1, 0],
+                p0=[1.0, 1.0, np.median(ratios), 0.0],
+                maxfev=10000
             )
-            y_pred = popt[0] * np.exp(-popt[1] * np.array(ratios)) + popt[2]
+            y_pred = sigmoid(np.array(ratios), *popt)
             r2 = r2_score(similarities_ratio, y_pred)
             all_r2[epoch] = r2
         except RuntimeError:
@@ -172,11 +178,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Analyze numerosity effects from results file."
     )
-    parser.add_argument(
-        "--results_file",
-        type=str,
-        required=True,
-        help="Path to the .pth file containing the results.",
-    )
-    args = parser.parse_args()
-    main(args.results_file)
+    
