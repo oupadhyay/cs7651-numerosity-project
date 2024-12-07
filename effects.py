@@ -32,6 +32,10 @@ def calculate_effects(results):
         similarities_ratio,
     )
 
+def sigmoid_function(x, lower, upper, inflection, rate):
+    return lower + (-lower + upper) / (1 + np.exp((inflection - x) / rate))
+
+
 # --- Plotting and correlation functions ---
 def plot_effects(
     distances,
@@ -61,18 +65,18 @@ def plot_effects(
     # Ratio Effect
     try:
         popt, _ = scipy.optimize.curve_fit(
-            lambda x, a, b, c: a * np.exp(-b * x) + c,
+            sigmoid_function,
             ratios,
             similarities_ratio,
-            p0=[1, 1, 0],
+            p0=[0.5, 1.0, 1.5, 1.0],
         )  # Fit exponential
-        y_pred = popt[0] * np.exp(-popt[1] * np.array(ratios)) + popt[2]
+        y_pred = sigmoid_function(np.array(ratios), *popt)
         r2 = r2_score(similarities_ratio, y_pred)
 
         axes[2].scatter(ratios, similarities_ratio)
         x_fit = np.linspace(min(ratios), max(ratios), 100)
         y_fit = popt[0] * np.exp(-popt[1] * x_fit) + popt[2]
-        axes[2].plot(x_fit, y_fit, "r-", label="Fitted Exponential")  # Plot fitted line
+        axes[2].plot(x_fit, y_fit, "r-", label="Fitted Sigmoid")  # Plot fitted line
 
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
