@@ -34,10 +34,6 @@ def calculate_effects(results):
     )
 
 
-def sigmoid_function(x, lower, upper, inflection, rate):
-    return lower + (-lower + upper) / (1 + np.exp((inflection - x) / rate))
-
-
 # --- Plotting and correlation functions ---
 def plot_effects(
     distances,
@@ -67,17 +63,19 @@ def plot_effects(
     # Ratio Effect
     try:
         popt, _ = scipy.optimize.curve_fit(
-            sigmoid_function,
+            lambda x, a, b, c, d: c / (1 + np.exp(-(x - b) / a)) + d,
             ratios,
             similarities_ratio,
             p0=[0.5, 1.0, 1.5, 1.0],
         )  # Fit exponential
-        y_pred = sigmoid_function(np.array(ratios), *popt)
+        y_pred = (
+            popt[2] / (1 + np.exp(-(np.array(ratios) - popt[1]) / popt[0])) + popt[3]
+        )
         r2 = r2_score(similarities_ratio, y_pred)
 
         axes[2].scatter(ratios, similarities_ratio)
         x_fit = np.linspace(min(ratios), max(ratios), 100)
-        y_fit = popt[0] * np.exp(-popt[1] * x_fit) + popt[2]
+        y_fit = popt[2] / (1 + np.exp(-(x_fit - popt[1]) / popt[0])) + popt[3]
         axes[2].plot(x_fit, y_fit, "r-", label="Fitted Sigmoid")  # Plot fitted line
 
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
