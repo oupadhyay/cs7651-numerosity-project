@@ -87,6 +87,7 @@ def plot_effects(
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
         axes[2].set_title(f"Ratio Effect (Epoch {epoch}), R²={r2:.2f}")
+        axes[2].set_ylim(0.7, 1.0)  # Set y-axis range
         axes[2].legend()
 
     except RuntimeError:
@@ -95,6 +96,8 @@ def plot_effects(
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
         axes[2].set_title(f"Ratio Effect (Epoch {epoch}) - No Fit")
+        axes[2].set_ylim(0.7, 1.0)  # Set y-axis range
+
 
     fig.tight_layout()  # Adjust subplot parameters for a tight layout
     plt.savefig(f"Combined_Effects_Epoch_{epoch}.png")  # Save as PNG
