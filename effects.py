@@ -46,10 +46,20 @@ def plot_effects(
 
     # Distance Effect
     correlation_distance, _ = pearsonr(distances, similarities_distance)
-    axes[0].scatter(distances, similarities_distance)
+    
+    # Fit linear model
+    coefficients = np.polyfit(distances, similarities_distance, 1)
+    slope = coefficients[0]
+    #intercept = coefficients[1]
+    x_fit = np.linspace(min(distances), max(distances), 100)
+    y_fit = np.polyval(coefficients, x_fit)
+    
+    axes[0].scatter(distances, similarities_distance, label="Data Points")
+    axes[0].plot(x_fit, y_fit, 'r-', label=f"Linear Fit (slope={slope:.2f})")
     axes[0].set_xlabel("Distance |n1 - n2|")
     axes[0].set_ylabel("Average Cosine Similarity")
     axes[0].set_title(f"Distance Effect (Epoch {epoch}), r={correlation_distance:.2f}")
+    axes[0].legend()
 
     # Size Effect
     correlation_size, _ = pearsonr(sizes, similarities_size)
