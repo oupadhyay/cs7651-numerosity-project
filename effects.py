@@ -46,14 +46,13 @@ def plot_effects(
 
     # Distance Effect
     correlation_distance, _ = pearsonr(distances, similarities_distance)
-    
+
     # Fit linear model
     coefficients = np.polyfit(distances, similarities_distance, 1)
     slope = coefficients[0]
-    #intercept = coefficients[1]
     x_fit = np.linspace(min(distances), max(distances), 100)
     y_fit = np.polyval(coefficients, x_fit)
-    
+
     axes[0].scatter(distances, similarities_distance, label="Data Points")
     axes[0].plot(x_fit, y_fit, 'r-', label=f"Linear Fit (slope={slope:.2f})")
     axes[0].set_xlabel("Distance |n1 - n2|")
@@ -98,20 +97,23 @@ def plot_effects(
         axes[2].set_title(f"Ratio Effect (Epoch {epoch}) - No Fit")
         axes[2].set_ylim(0.7, 1.0)  # Set y-axis range
 
-
     fig.tight_layout()  # Adjust subplot parameters for a tight layout
     plt.savefig(f"Combined_Effects_Epoch_{epoch}.png")  # Save as PNG
     plt.close(fig)
 
+    return slope  # Return the slope of the linear fit for the distance effect
+
 def plot_correlations(all_correlations, all_r2):
-    epochs = list(all_correlations.keys())
+    epochs = sorted(all_correlations.keys())  # Ensure epochs are in order
     distance_correlations = [all_correlations[epoch][0] for epoch in epochs]
     size_correlations = [all_correlations[epoch][1] for epoch in epochs]
+    distance_slopes = [all_correlations[epoch][2] for epoch in epochs]
     ratio_r2 = [
         all_r2[epoch] for epoch in epochs if epoch in all_r2
     ]  # Handle cases where ratio fit fails
+    ratio_epochs = [epoch for epoch in epochs if epoch in all_r2]
 
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    fig, axes = plt.subplots(1, 4, figsize=(24, 6))
 
     axes[0].plot(epochs, distance_correlations, marker="o")
     axes[0].set_xlabel("Epoch")
@@ -125,16 +127,20 @@ def plot_correlations(all_correlations, all_r2):
     axes[1].set_title("Size Effect Correlation Across Epochs")
     axes[1].grid(True)
 
-    axes[2].plot(
-        epochs[: len(ratio_r2)], ratio_r2, marker="o"
-    )  # Use the correct number of epochs.
+    axes[2].plot(ratio_epochs, ratio_r2, marker="o")
     axes[2].set_xlabel("Epoch")
     axes[2].set_ylabel("R²")
     axes[2].set_title("Ratio Effect R² Across Epochs")
     axes[2].grid(True)
 
+    axes[3].plot(epochs, distance_slopes, marker="o")
+    axes[3].set_xlabel("Epoch")
+    axes[3].set_ylabel("Slope")
+    axes[3].set_title("Distance Effect Slope Across Epochs")
+    axes[3].grid(True)
+
     fig.tight_layout()
-    plt.savefig("Correlation_and_R2_Across_Epochs.png")
+    plt.savefig("Correlation_and_Slopes_Across_Epochs.png")
     plt.close(fig)
 
 # --- Main effects analysis ---
@@ -152,7 +158,8 @@ def main(results_file):
             similarities_size,
             similarities_ratio,
         ) = calculate_effects(results)
-        plot_effects(
+
+        slope_distance = plot_effects(
             distances,
             sizes,
             ratios,
@@ -164,7 +171,7 @@ def main(results_file):
 
         correlation_distance, _ = pearsonr(distances, similarities_distance)
         correlation_size, _ = pearsonr(sizes, similarities_size)
-        all_correlations[epoch] = (correlation_distance, correlation_size)
+        all_correlations[epoch] = (correlation_distance, correlation_size, slope_distance)
 
         try:
             popt, _ = scipy.optimize.curve_fit(
