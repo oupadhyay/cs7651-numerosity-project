@@ -87,7 +87,7 @@ def plot_effects(
         x_fit = np.linspace(min(ratios), max(ratios), 100)
         y_fit = popt[2] / (1 + np.exp(-(x_fit - popt[1]) / popt[0])) + popt[3]
         axes[2].plot(x_fit, y_fit, "r-", label="Fitted Sigmoid")  # Plot fitted line
-
+        axes[2].set_ylim(0.45, 0.85)  # Set y-axis range
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
         axes[2].set_title(f"Ratio Effect (Epoch {epoch}), R²={r2:.2f}")
@@ -99,6 +99,7 @@ def plot_effects(
         axes[2].set_xlabel("Ratio max(n1, n2) / min(n1, n2)")
         axes[2].set_ylabel("Average Cosine Similarity")
         axes[2].set_title(f"Ratio Effect (Epoch {epoch}) - No Fit")
+        axes[2].set_ylim(0.45, 0.85)  # Set y-axis range
 
     fig.tight_layout()  # Adjust subplot parameters for a tight layout
     plt.savefig(f"Combined_Effects_Epoch_{epoch}.png")  # Save as PNG
